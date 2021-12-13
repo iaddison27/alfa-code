@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import './App.css';
 import Header from './Header.js';
@@ -8,36 +8,26 @@ import Keys from './keys/Keys.js';
 import DecodeService from '../services/DecodeService.js';
 import Array2dContext from "../context/array-2d-context";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        array2d: null,
-        bytePositions: DecodeService.bytePositions,
-        selectedFile: null,
-    };
-    this.handleFileDecode = this.handleFileDecode.bind(this);
+function App(props) {
+  const [array2d, setArray2d] = useState(Array.from(Array(8), () => new Array(16)));
+
+  const handleFileDecode = (hexArray) => {
+    setArray2d(DecodeService.convertHexArrayTo2dArray(hexArray));
+    props.history.replace('/decode');
   }
 
-  handleFileDecode(hexArray) {
-    this.setState({ array2d: DecodeService.convertHexArrayTo2dArray(hexArray) });
-    this.props.history.replace('/decode');
-  }
-
-  render() {
-    return (
+  return (
         <div>
           <Header />
-          <Array2dContext.Provider value={this.state.array2d}>
-              <FileUpload onFileDecode={this.handleFileDecode} />
+          <Array2dContext.Provider value={array2d}>
+              <FileUpload onFileDecode={handleFileDecode} />
               <Route path={`/decode`}>
-                  <Grid bytePositions={this.state.bytePositions} />
-                  <Keys bytePositions={this.state.bytePositions}/>
+                  <Grid bytePositions={DecodeService.bytePositions} />
+                  <Keys bytePositions={DecodeService.bytePositions}/>
               </Route>
           </Array2dContext.Provider>
         </div>
     );
-  }
 }
 
 export default withRouter(App);

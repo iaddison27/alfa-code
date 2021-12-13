@@ -1,16 +1,13 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
 import ImmobRow from './ImmobRow.js';
 import Array2dContext from "../../context/array-2d-context";
 
-class ImmobData extends Component {
-    static contextType = Array2dContext;
-
-    render() {
-        const hex = this.context;
-        const bytePositions = this.props.bytePositions;
+function ImmobData(props) {
+        const array2d = useContext(Array2dContext);
+        const bytePositions = props.bytePositions;
         return (
             <React.Fragment>
-            {hex?.map(function(row, index) {
+            {array2d?.map(function(row, index) {
                 return (
                     <ImmobRow
                         key={index}
@@ -22,7 +19,6 @@ class ImmobData extends Component {
             })}
             </React.Fragment>
         );
-    }
 }
 
 export default ImmobData;

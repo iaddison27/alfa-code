@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import { useContext } from 'react';
 import DecodeService from '../../services/DecodeService.js';
 import Array2dContext from "../../context/array-2d-context";
 
-class KeyByte extends Component {
-    static contextType = Array2dContext;
+function KeyByte(props) {
+    const array2d = useContext(Array2dContext);
 
-    colourByteForKey(array2d, bytePositions, colour, keyPosition) {
+    const colourByteForKey = (bytePositions, colour, keyPosition) => {
         if (array2d) {
             return DecodeService.getByteAtPositionAsHex(
-                /*array2d,*/ this.context,
+                array2d,
                 bytePositions,
                 colour,
                 keyPosition
@@ -17,18 +17,15 @@ class KeyByte extends Component {
         return null;
     }
 
-    render() {
-        const array2d = this.context;
-        const bytePositions = this.props.bytePositions;
-        const colour = this.props.colour;
-        const keyPosition = this.props.keyPosition;
+    const bytePositions = props.bytePositions;
+    const colour = props.colour;
+    const keyPosition = props.keyPosition;
 
-        return (
-            <td className={colour}>
-                {this.colourByteForKey(array2d, bytePositions, colour, keyPosition)}
-            </td>
-        );
-    }
+    return (
+        <td className={colour}>
+            {colourByteForKey(bytePositions, colour, keyPosition)}
+        </td>
+    );
 }
 
 export default KeyByte;
